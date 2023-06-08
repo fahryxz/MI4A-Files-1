@@ -12,6 +12,14 @@
                 <thead>
                     <tr>
                         <th>Nama Program Studi</th>
+                        @if (Session::get('success'))
+                        <div class="alert alert-success">
+                          {{Session::get('success')}}
+                        </div>    
+                        @endif
+                         <div class="text-right">
+                    <a href = "{{ route('prodi.create')}}" type="button" class="btn btn-info btn-rounded btn-fw">Tambah</a>
+                  </div>
                         <th>Nama Fakultas</th>
                     </tr>
                 </thead>
