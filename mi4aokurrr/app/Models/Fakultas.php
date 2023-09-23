@@ -11,4 +11,6 @@ class Fakultas extends Model
     use HasFactory, HasUuids;
     // biar namo tablenyo tetep single
     protected $table = 'fakultas';
+
+    protected $fillable = ['nama_fakultas','nama_dekan','nama_wakil_dekan'];
 }

@@ -43,13 +43,21 @@ class FakultasController extends BaseController
             'nama_wakil_dekan' => 'required'
         ]);
 
-        $fakultas = new Fakultas();
-        $fakultas-> nama_fakultas = $validasi['nama_fakultas'];
-        $fakultas-> nama_dekan  = $validasi['nama_dekan'];
-        $fakultas-> nama_wakil_dekan = $validasi['nama_wakil_dekan'];
+        $result = Fakultas::create($validasi);
+        if($result){
+            return $this->sendSuccess($result,
+            'Fakultas berhasil ditambahkan', 201);
+        }else {
+            return $this->sendError('','Data gagal disimpan', 400);
+        }
 
-        $fakultas->save();
-        return redirect() -> route('fakultas.index') -> with('success', 'Data berhasil disimpan');
+        // $fakultas = new Fakultas();
+        // $fakultas-> nama_fakultas = $validasi['nama_fakultas'];
+        // $fakultas-> nama_dekan  = $validasi['nama_dekan'];
+        // $fakultas-> nama_wakil_dekan = $validasi['nama_wakil_dekan'];
+
+        // $fakultas->save();
+        // return redirect() -> route('fakultas.index') -> with('success', 'Data berhasil disimpan');
 
     }
 

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\API\BaseController;
 use App\Models\Mahasiswa;
 use App\Models\Prodi;
 use Illuminate\Http\Request;
 
-class MahasiswaController extends Controller
+class MahasiswaController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +16,7 @@ class MahasiswaController extends Controller
     {
         //
         $mahasiswas = Mahasiswa::all();
-        return view('mahasiswa.index') -> with('mahasiswas', $mahasiswas);
+        return $this->sendSuccess($mahasiswas, 'Data Mahasiswa', 200);
     }
 
     /**
@@ -43,6 +44,21 @@ class MahasiswaController extends Controller
             'prodi_id' => 'required'
         ]);
 
+        $ext = $request -> foto -> getClientOriginalExtension();
+        $new_filename = $request->npm . '.' . $ext;
+        $file = $request->file('foto');
+        $file ->move('public', $new_filename);
+
+        $validasi['foto'] = $new_filename;
+
+        $result = Mahasiswa::create($validasi);
+        if($result){
+            return $this->sendSuccess($result,
+            'mahasiswa berhasil ditambahkan', 201);
+        }else {
+            return $this->sendError('','Data gagal disimpan', 400);
+        }
+
         $mahasiswa = new Mahasiswa();
         $mahasiswa->npm = $validasi['npm'];
         $mahasiswa->nama = $validasi['nama'];
@@ -51,12 +67,12 @@ class MahasiswaController extends Controller
 
         // upload foto
 
-        $ext = $request -> foto -> getClientOriginalExtension();
-        $new_filename = $validasi['npm'] . '.' . $ext;
-        $request -> foto -> storeAs('public', $new_filename);
+        // $ext = $request -> foto -> getClientOriginalExtension();
+        // $new_filename = $request->npm . '.' . $ext;
+        // $file = $request->file('foto');
+        // $request ->move('public', $new_filename);
 
-        $mahasiswa -> foto = $new_filename;
-        $mahasiswa -> save();
+        // $validasi['foto'] = $new_filename;
         // $fileName = time() . '.' . $request->image->extension();
         // $request->image->storeAs('public/images', $fileName);
         

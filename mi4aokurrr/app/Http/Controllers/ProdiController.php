@@ -42,6 +42,14 @@ class ProdiController extends BaseController
             
         ]);
 
+        $result = Prodi::create($validasi);
+        if($result){
+            return $this->sendSuccess($result,
+            'Prodi berhasil ditambahkan', 201);
+        }else {
+            return $this->sendError('','Data gagal disimpan', 400);
+        }
+
         $prodi = new Prodi();
         $prodi -> fakultas_id = $validasi['fakultas_id'];
         $prodi -> nama_prodi = $validasi['nama_prodi'];
