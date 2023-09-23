@@ -27,3 +27,5 @@ Route::get('mahasiswa', [MahasiswaController::class, 'index']);
 Route::post('fakultas/store', [FakultasController::class, 'store']);
 Route::post('prodi/store', [ProdiController::class, 'store']);
 Route::post('mahasiswa/store', [MahasiswaController::class, 'store']);
+
+Route::post('fakultas/store', [FakultasController::class, 'destroy']);

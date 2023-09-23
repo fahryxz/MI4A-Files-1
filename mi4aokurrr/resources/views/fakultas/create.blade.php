@@ -1,5 +1,4 @@
 
-
 @extends('layout.main')
 @section('judul_halaman', 'Halaman Fakultas')
 

@@ -51,6 +51,7 @@ class FakultasController extends BaseController
             return $this->sendError('','Data gagal disimpan', 400);
         }
 
+
         // $fakultas = new Fakultas();
         // $fakultas-> nama_fakultas = $validasi['nama_fakultas'];
         // $fakultas-> nama_dekan  = $validasi['nama_dekan'];
@@ -88,8 +89,16 @@ class FakultasController extends BaseController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Fakultas $fakultas)
+    public function destroy($id)
     {
         //
+        $fakultas = Fakultas::findOrFail
+        ($id);
+        if($fakultas->delete()){
+            return $this->sendSuccess([],'Data Fakultas Berhasil Di Hapus', 303);
+        }else{
+            return $this->sendError('','Data Fakultas gaga dihapus',404);
+        }
+
     }
 }
