@@ -101,16 +101,31 @@ class ProdiController extends BaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Prodi $prodi)
+    public function update(Request $request, $id)
     {
-        //
+        $validasi = $request -> validate ([
+            
+            'fakultas_id' => 'required',
+            'nama_prodi' => 'required'
+            
+        ]);
+        $result = Prodi::where('id', $id);
+        $result->update($validasi);
+        return $this->sendError($result->first(),'Prodi berhasil diubah', 200);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Prodi $prodi)
+    public function destroy($id)
     {
         //
+        $prodi = Prodi::where('id', $id);
+        if($prodi->delete()){
+            return $this->sendSuccess([],'Data Prodi Berhasil Di Hapus', 303);
+        }else{
+            return $this->sendError('','Data Prodi gaga dihapus',404);
+        }
     }
 }

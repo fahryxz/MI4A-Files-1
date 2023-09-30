@@ -119,28 +119,29 @@ class MahasiswaController extends BaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Mahasiswa $mahasiswa)
+    public function update(Request $request, $id)
     {
         //
         $validasi = $request->validate([
-            'npm' => 'required',
-            'nama' => 'required',
-            'tanggal' => 'required',
-            'foto' => 'required|file|image',
-            'prodi_id' => 'required'
+            // 'npm' => 'required|unique:mahasiswas',
+            'nama' => '',
+            'tanggal' => '',
+            'foto' => '|file|image',
+            'prodi_id' => ''
         ]);
-        // upload foto
 
-        $ext = $request -> foto -> getClientOriginalExtension();
-        $new_filename = $validasi['npm'] . '.' . $ext;
-        $request -> foto -> storeAs('public', $new_filename);
+        $result = Mahasiswa::where('id', $id);
+        if(isset($request->foto)){
 
-        $validasi['foto']= $new_filename;
+            $ext = $request -> foto -> getClientOriginalExtension();
+            $new_filename = $result->first()->npm . '.' . $ext;
+            $file = $request->file('foto');
+            $file ->move('public', $new_filename);
+            $validasi['foto'] = $new_filename;
+            }
+        $result->update($validasi);
+        return $this->sendError($result->first(),'Mahasiswa berhasil diubah', 200);
         
-        Mahasiswa::where('id', $mahasiswa->id) -> update($validasi);
-        $mahasiswa -> foto = $new_filename;
-        $mahasiswa -> save();
-        return redirect() -> route ('mahasiswa.index') -> with('success', 'Data berhasil disimpan' . $validasi['nama']);  
 
         
     }
@@ -148,11 +149,15 @@ class MahasiswaController extends BaseController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mahasiswa $mahasiswa)
+    public function destroy($id)
     {
         //
-        $this->authorize('delete', $mahasiswa);
-        $mahasiswa->delete();
-        return back();
+        $mahasiswa = Mahasiswa::where('id', $id);
+        unlink(public_path("public/".$mahasiswa->first()->foto));
+        if($mahasiswa->delete()){
+            return $this->sendSuccess([],'Data Mahasiswa Berhasil Di Hapus', 303);
+        }else{
+            return $this->sendError('','Data Mahasiswa gaga dihapus',404);
+        }
     }
 }

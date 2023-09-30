@@ -81,19 +81,25 @@ class FakultasController extends BaseController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Fakultas $fakultas)
+    public function update(Request $request, $id)
     {
-        //
+        $validasi = $request -> validate([
+            'nama_fakultas' => 'required',
+            'nama_dekan' => 'required',
+            'nama_wakil_dekan' => 'required'
+        ]);
+        $result = Fakultas::where('id', $id);
+        $result->update($validasi);
+        return $this->sendError($result->first(),'Fakultas berhasil diubah', 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    {
+    { 
         //
-        $fakultas = Fakultas::findOrFail
-        ($id);
+        $fakultas = Fakultas::where('id', $id);
         if($fakultas->delete()){
             return $this->sendSuccess([],'Data Fakultas Berhasil Di Hapus', 303);
         }else{
